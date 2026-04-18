@@ -1,5 +1,5 @@
 import { t, type Static } from "elysia";
-import { successResponseSchema } from "../../../lib/error-response";
+import { successResponseSchema } from "../../../lib/success-response";
 
 export const listUsersDataSchema = t.Array(
   t.Object({

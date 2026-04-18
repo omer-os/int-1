@@ -1,8 +1,6 @@
 import { t, type Static } from "elysia";
-import {
-  successResponseSchema,
-  type ErrorResponse,
-} from "../../../lib/error-response";
+import { successResponseSchema } from "../../../lib/success-response";
+import { type ErrorResponse } from "../../../lib/error-response";
 
 export const addUserSchema = t.Object({
   email: t.String({ format: "email" }),

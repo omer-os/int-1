@@ -15,6 +15,8 @@ export const addUserRouter = new Elysia().post(
     response: {
       200: addUserResponseSchema,
       409: errorResponseSchema,
+      422: errorResponseSchema,
+      500: errorResponseSchema,
     },
   }
 );
