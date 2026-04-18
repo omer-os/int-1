@@ -1,19 +1,13 @@
 import Elysia from "elysia";
-import { getAllUsersService } from "./serivce";
 import { listUsersResponseSchema } from "./schema";
+import { listUsers } from "./service";
 
-
-export const listUsersRoute = new Elysia({ prefix: "/users" })
-  .get(
-    "/",
-    async () => {
-      const users = await getAllUsersService();
-
-      return users;
+export const listUsersRoute = new Elysia().get(
+  "/",
+  () => listUsers(),
+  {
+    response: {
+      200: listUsersResponseSchema,
     },
-    {
-      response: {
-        200: listUsersResponseSchema,
-      },
-    }
-  );
+  }
+);
