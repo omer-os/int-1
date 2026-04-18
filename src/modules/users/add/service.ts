@@ -1,21 +1,22 @@
 import { db } from "../../../lib/db";
-import { addUserResponseSchemaType, AddUserSchemaType } from "./schema";
+import type { AddUserInput, AddUserResult } from "./schema";
 
-export const addUserService = async ({ data }: { data: AddUserSchemaType }): Promise<addUserResponseSchemaType> => {
-  try {
-    const newUser = await db.user.create({
-      data: {
-        email: data.email,
-        id: data.id
-      }
-    });
+export const addUser = async (input: AddUserInput): Promise<AddUserResult> => {
+  const existing = await db.user.findFirst({
+    where: { email: input.email },
+    select: { id: true },
+  });
 
-    return {
-      email: newUser.email,
-      id: newUser.id
-    };
-  } catch (error) {
-    console.log(error);
-    throw error;
+  if (existing) {
+    return { status: false, message: "Email already in use", data: null };
   }
+
+  const password = await Bun.password.hash(input.password);
+
+  const user = await db.user.create({
+    data: { email: input.email, password },
+    select: { id: true, email: true },
+  });
+
+  return { status: true, message: "User created", data: user };
 };

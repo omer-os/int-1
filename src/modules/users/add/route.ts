@@ -1,23 +1,20 @@
 import Elysia from "elysia";
-import { addUserResponseSchema, addUserSchema } from "./schema";
-import { addUserService } from "./service";
+import { addUserSchema, addUserResponseSchema } from "./schema";
+import { errorResponseSchema } from "../../../lib/error-response";
+import { addUser } from "./service";
 
-
-export const addUserRouter = new Elysia({ prefix: "/users" })
-  .get(
-    "/",
-    async ({ body }) => {
-      const users = await addUserService(body);
-
-      return users;
+export const addUserRouter = new Elysia().post(
+  "/",
+  async ({ body, status }) => {
+    const result = await addUser(body);
+    if (!result.status) return status(409, result);
+    return result;
+  },
+  {
+    body: addUserSchema,
+    response: {
+      200: addUserResponseSchema,
+      409: errorResponseSchema,
     },
-    {
-      body: addUserSchema,
-      response: {
-        200: addUserResponseSchema,
-      },
-      detail: {
-        summary: ''
-      }
-    }
-  );
+  }
+);
